@@ -1,5 +1,5 @@
 {
-    "name": "aoe/composer-satis-builder",
+    "name": "lucklrj/composer-satis-builder",
     "description": "Complementary tool to Satis for updating the satis.json 'require' key from the project composer.json.",
     "homepage": "https://github.com/AOEpeople/composer-satis-builder",
     "license": "MIT License",
