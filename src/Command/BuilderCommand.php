@@ -1,4 +1,5 @@
 <?php
+
 namespace AOE\Composer\Satis\Generator\Command;
 
 use AOE\Composer\Satis\Generator\Builder\SatisBuilder;
@@ -47,6 +48,12 @@ class BuilderCommand extends Command
                 'sets "require-dependencies"'
             )
             ->addOption(
+                'merge-requirements',
+                'mc',
+                InputOption::VALUE_NONE,
+                'sets "require-dependencies"'
+            )
+            ->addOption(
                 'add-dev-requirements',
                 'drc',
                 InputOption::VALUE_NONE,
@@ -73,7 +80,8 @@ class BuilderCommand extends Command
         }
         $composerFile = $input->getArgument('composer');
         if (false === file_exists($composerFile)) {
-            throw new \InvalidArgumentException(sprintf('required file does not exists: "%s"', $composerFile), 1446115336);
+            throw new \InvalidArgumentException(sprintf('required file does not exists: "%s"', $composerFile),
+                1446115336);
         }
 
         $satis = json_decode(file_get_contents($satisFile));
@@ -118,6 +126,10 @@ class BuilderCommand extends Command
 
         if ($input->getOption('add-requirements')) {
             $builder->addRequiresFromComposer();
+        }
+
+        if ($input->getOption('merge-requirements')) {
+            $builder->mergeRequiresFromComposer();
         }
 
         if ($input->getOption('add-dev-requirements')) {
