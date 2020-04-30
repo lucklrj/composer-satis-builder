@@ -22,6 +22,7 @@ You can choose to manually maintain the "require" key which can be time-consumin
         [-rdd|--require-dev-dependencies REQUIRE-DEV-DEPENDENCIES] Sets the "require-dev-dependencies" key
         [-rd|--require-dependencies REQUIRE-DEPENDENCIES] Sets the "require-dependencies" key
         [-rc|--add-requirements] Add the requirements from the project composer.json
+        [-mc|--merge-requirements] Merge the requirements from the project composer.json
         [-drc|--add-dev-requirements] Add the dev requirements from the project composer.json
         [-rr|--reset-requirements] Will reset (empty) the satis requirements (require key) before adding the requirements of the composer.json
 
@@ -66,7 +67,7 @@ composer.json
 
 and Composer Satis Builder is installed:
 
-    php composer.phar create-project aoe/composer-satis-builder --stability=dev
+    php composer.phar create-project lucklrj/composer-satis-builder --stability=dev
 
 After running
 
@@ -93,3 +94,6 @@ Now build Satis as before:
 ## License
 
 Composer Satis Builder is licensed under the MIT License - see the LICENSE file for details
+
+## todo
+Need support:^ ~ >= > * and so on.
