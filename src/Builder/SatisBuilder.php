@@ -57,30 +57,44 @@ class SatisBuilder
         if (false === isset($this->satis->require)) {
             $this->satis->require = new \stdClass();
         }
-        foreach ($this->composer->require as $package => $version) {
+        foreach ($this->composer->require as $package => $composer_version) {
+
             if (property_exists($this->satis->require, $package)) {
                 if (strtolower($package) == "php") {
                     continue;
                 }
-                if ($this->satis->require->$package == $version) {
+                if ($this->satis->require->$package == $composer_version) {
                     continue;
                 }
                 if ($this->satis->require->$package == "*") {
                     continue;
                 }
+                $composer_version = str_replace("||", "|", $composer_version);
+                $array_composer_version = explode("|", $composer_version);
                 //todo 先简单合并一下， 等以后有空了再处理各种运算符的合并：^,~,>=,>,<,<=,*等等
-                $this_require = explode("|", $this->satis->require->$package);
+                $this_require = explode("|", str_replace(" ", "", $this->satis->require->$package));
+
                 foreach ($this_require as $index => $single_version) {
-                    if (trim($single_version) == $version) {
-                        continue;
-                    } else {
-                        $this_require[] = $version;
+                    $single_version = trim($single_version);
+                    foreach ($array_composer_version as $loop_index => $_version) {
+                        $_version = trim($_version);
+                        if ($_version == "*") {
+                            $this_require = ["*"];
+                            break 2;
+                        } else {
+                            if (in_array($_version, $this_require) == true) {
+                                continue;
+                            } else {
+                                $this_require[] = $_version;
+                            }
+                        }
+
                     }
                 }
                 $this->satis->require->$package = join(" | ", $this_require);
 
             } else {
-                $this->satis->require->$package = $version;
+                $this->satis->require->$package = $composer_version;
             }
         }
         return $this;
