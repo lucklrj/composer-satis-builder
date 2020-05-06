@@ -20,14 +20,14 @@ class BuilderCommand extends Command
             ->setName('build')
             ->setDescription('Generate satis.json file from composer.json')
             ->addArgument(
-                'composer',
-                InputArgument::REQUIRED,
-                'Path to composer.json file'
-            )
-            ->addArgument(
                 'satis',
                 InputArgument::REQUIRED,
                 'Path to satis.json file'
+            )
+            ->addArgument(
+                'composer',
+                InputArgument::OPTIONAL,
+                'Path to composer.json file'
             )
             ->addOption(
                 'require-dev-dependencies',
@@ -52,6 +52,12 @@ class BuilderCommand extends Command
                 'mc',
                 InputOption::VALUE_NONE,
                 'sets "require-dependencies"'
+            )
+            ->addOption(
+                'merge-repositories',
+                'mr',
+                InputOption::VALUE_REQUIRED,
+                'merge "repositories"'
             )
             ->addOption(
                 'add-dev-requirements',
@@ -130,6 +136,20 @@ class BuilderCommand extends Command
 
         if ($input->getOption('merge-requirements')) {
             $builder->mergeRequiresFromComposer();
+        }
+        $new_repositories = $input->getOption('merge-repositories');
+        if ($new_repositories) {
+            list($type, $url) = explode(":", $new_repositories);
+            $support_types = ["git"];
+            if (in_array($type, $support_types) == false) {
+                throw new \InvalidArgumentException(sprintf('repositoriy"s type is not error.supports: "%s"',
+                    join(",", $support_types)), 0);
+            }
+            if ($url == "") {
+                throw new \InvalidArgumentException("repositoriy\"s url is required ", 0);
+            }
+            //todo 检查$url格式
+            $builder->mergeRepositoriesFromComposer($type, $url);
         }
 
         if ($input->getOption('add-dev-requirements')) {

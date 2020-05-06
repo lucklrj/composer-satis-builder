@@ -1,0 +1,4 @@
+#! /bin/bash
+php composer-satis-builder build ./satis.json ./composer.json --merge-requirements
+
+

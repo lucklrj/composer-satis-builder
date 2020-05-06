@@ -100,11 +100,33 @@ class SatisBuilder
         return $this;
     }
 
+    public function mergeRepositoriesFromComposer($type, $url)
+    {
+        $is_exists = false;
+        foreach ($this->satis->repositories as $index => $single_repertory) {
+            if (
+                property_exists($single_repertory, "type") &&
+                $single_repertory->type == $type &&
+                property_exists($single_repertory, "url") &&
+                $single_repertory->url == $url
+            ) {
+                $is_exists = true;
+                break;
+            }
+        }
+        if ($is_exists === false) {
+            $new_repertory = new \stdClass();
+            $new_repertory->type = $type;
+            $new_repertory->url = $url;
+            $new_repertory->{"installation-source"} = "dist";
+            $this->satis->repositories[] = $new_repertory;
+        }
+    }
+
     /**
      * @return SatisBuilder
      */
-    public
-    function addDevRequiresFromComposer()
+    public function addDevRequiresFromComposer()
     {
         if (false === isset($this->satis->require)) {
             $this->satis->require = new \stdClass();
@@ -119,8 +141,7 @@ class SatisBuilder
      * @param boolean $require
      * @return SatisBuilder
      */
-    public
-    function setRequireDependencies(
+    public function setRequireDependencies(
         $require = true
     ) {
         $this->satis->{'require-dependencies'} = (boolean)$require;
@@ -131,8 +152,7 @@ class SatisBuilder
      * @param boolean $require
      * @return SatisBuilder
      */
-    public
-    function setRequireDevDependencies(
+    public function setRequireDevDependencies(
         $require = true
     ) {
         $this->satis->{'require-dev-dependencies'} = (boolean)$require;
@@ -142,8 +162,7 @@ class SatisBuilder
     /**
      * @return \stdClass
      */
-    public
-    function build()
+    public function build()
     {
         return $this->satis;
     }
