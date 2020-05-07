@@ -144,7 +144,7 @@ class BuilderCommand extends Command
         }
         $new_repositories = $input->getOption('merge-repositories');
         if ($new_repositories) {
-            list($type, $url) = explode("||", $new_repositories);
+            list($type, $url) = explode("::", $new_repositories);
             $support_types = ["git"];
             if (in_array($type, $support_types) == false) {
                 throw new \InvalidArgumentException(sprintf('repositoriy"s type is not error.supports: "%s"',
