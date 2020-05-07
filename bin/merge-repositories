@@ -1,2 +1,2 @@
 #! /bin/bash
-php composer-satis-builder buil ./satis.json ./composer.json --merge-repositories=$1
+php composer-satis-builder build ./satis.json  --merge-repositories=$1

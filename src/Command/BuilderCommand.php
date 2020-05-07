@@ -85,9 +85,26 @@ class BuilderCommand extends Command
             throw new \InvalidArgumentException(sprintf('required file does not exists: "%s"', $satisFile), 1446115325);
         }
         $composerFile = $input->getArgument('composer');
-        if (false === file_exists($composerFile)) {
-            throw new \InvalidArgumentException(sprintf('required file does not exists: "%s"', $composerFile),
-                1446115336);
+        $composer = new \stdClass();
+        if (true === file_exists($composerFile)) {
+            if (is_file($composerFile) == false) {
+                throw new \InvalidArgumentException(sprintf('required file does not exists: "%s"', $composerFile),
+                    1446115336);
+            } else {
+                $composer = json_decode(file_get_contents($composerFile));
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    throw new \RuntimeException(
+                        sprintf(
+                            'An error has occurred while decoding "%s". Error code: %s. Error message: "%s".',
+                            $composerFile,
+                            json_last_error(),
+                            json_last_error_msg()
+                        ),
+                        1447257260
+                    );
+                }
+            }
+
         }
 
         $satis = json_decode(file_get_contents($satisFile));
@@ -103,18 +120,6 @@ class BuilderCommand extends Command
             );
         }
 
-        $composer = json_decode(file_get_contents($composerFile));
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException(
-                sprintf(
-                    'An error has occurred while decoding "%s". Error code: %s. Error message: "%s".',
-                    $composerFile,
-                    json_last_error(),
-                    json_last_error_msg()
-                ),
-                1447257260
-            );
-        }
 
         $builder = new SatisBuilder($composer, $satis);
 
