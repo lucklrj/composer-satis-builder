@@ -71,7 +71,7 @@ and Composer Satis Builder is installed:
 
 After running
 
-    php composer-satis-builder/bin/composer-satis-builder build composer.json satis.json --reset-requirements --add-requirements
+    php composer-satis-builder/bin/composer-satis-builder build  satis.json composer.json --reset-requirements --add-requirements
 
 satis.json will look like:
 
