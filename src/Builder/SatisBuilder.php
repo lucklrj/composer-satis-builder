@@ -50,14 +50,15 @@ class SatisBuilder
     }
 
     /**
-     * @return SatisBuilder
+     * @param string $point
+     * @return $this
      */
-    public function mergeRequiresFromComposer()
+    public function mergeRequiresFromComposer($point = "require")
     {
         if (false === isset($this->satis->require)) {
             $this->satis->require = new \stdClass();
         }
-        foreach ($this->composer->require as $package => $composer_version) {
+        foreach ($this->composer->$point as $package => $composer_version) {
 
             if (property_exists($this->satis->require, $package)) {
                 if (strtolower($package) == "php") {
@@ -128,13 +129,7 @@ class SatisBuilder
      */
     public function addDevRequiresFromComposer()
     {
-        if (false === isset($this->satis->require)) {
-            $this->satis->require = new \stdClass();
-        }
-        foreach ($this->composer->{'require-dev'} as $package => $version) {
-            $this->satis->require->$package = $version;
-        }
-        return $this;
+        return $this->mergeRequiresFromComposer("require-dev");
     }
 
     /**
